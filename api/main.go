@@ -32,6 +32,10 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "test")
+}
+
+func getAuthenticatedGitHubClient() *github.Client {
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: os.Getenv("GITHUB_CLIENT_TOKEN")},
 	)
@@ -39,10 +43,34 @@ func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
 
 	client := github.NewClient(tc)
 
+	return client
+}
+
+func getRepositoryData(client *github.Client) {
+
 	// list all repositories for the authenticated user
-	//repos, _, err := client.Repositories.List("", nil)
-	orgs, _, _ := client.Organizations.List("vgardner", nil)
-	fmt.Fprintf(w, *orgs[1].Login)
+	repos, _, _ := client.Repositories.List("", nil)
+	//orgs, _, _ := client.Organizations.List("vgardner", nil)
+
+	var s []string
+	var owner []string
+	for _, value := range repos {
+		s = append(s, *value.FullName)
+		owner = append(owner, *value.Owner.Login)
+	}
+	fmt.Println(s)
+	fmt.Println(owner)
+}
+
+func getRepositoryTags(client *github.Client) {
+	//list all repositories for the authenticated user
+	repos, _, _ := client.Repositories.ListTags("EconomistDigitalSolutions", "website", nil)
+
+	var s []string
+	for _, value := range repos {
+		s = append(s, *value.Name)
+	}
+	fmt.Println(s)
 }
 
 func main() {
@@ -51,6 +79,11 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	client := getAuthenticatedGitHubClient()
+	getRepositoryData(client)
+
+	getRepositoryTags(client)
 
 	gorillaRoute := mux.NewRouter()
 	gorillaRoute.HandleFunc("/api/{user:[0-9]+}", Hello)

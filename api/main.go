@@ -73,6 +73,17 @@ func getRepositoryTags(client *github.Client) {
 	fmt.Println(s)
 }
 
+func getCommitComparison(client *github.Client) {
+	//list all repositories for the authenticated user
+	repos, _, _ := client.Repositories.CompareCommits("EconomistDigitalSolutions", "website", "release-296.0", "release-297.0")
+
+	var s []string
+	for _, value := range repos.Commits {
+		s = append(s, *value.SHA)
+	}
+	fmt.Println(s)
+}
+
 func main() {
 	// Load vars
 	err := godotenv.Load()
@@ -84,6 +95,8 @@ func main() {
 	getRepositoryData(client)
 
 	getRepositoryTags(client)
+
+	getCommitComparison(client)
 
 	gorillaRoute := mux.NewRouter()
 	gorillaRoute.HandleFunc("/api/{user:[0-9]+}", Hello)

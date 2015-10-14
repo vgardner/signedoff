@@ -16,6 +16,11 @@ type API struct {
 	Message string "json:message"
 }
 
+type Release struct {
+	releaseId string
+	commits   []github.RepositoryCommit
+}
+
 func Hello(w http.ResponseWriter, r *http.Request) {
 	urlParams := mux.Vars(r)
 	name := urlParams["user"]
@@ -32,6 +37,8 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
+	var release = Release{}
+	release.commits = getCommitComparison(client)
 	fmt.Fprintf(w, "test")
 }
 
@@ -84,11 +91,6 @@ func getCommitComparison(client *github.Client) []github.RepositoryCommit {
 	return repos.Commits
 }
 
-type Release struct {
-	releaseId string
-	commits   []github.RepositoryCommit
-}
-
 func main() {
 	// Load vars
 	err := godotenv.Load()
@@ -96,14 +98,10 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	var release = Release{}
-
 	client := getAuthenticatedGitHubClient()
 	getRepositoryData(client)
 
 	getRepositoryTags(client)
-
-	release.commits = getCommitComparison(client)
 
 	gorillaRoute := mux.NewRouter()
 	gorillaRoute.HandleFunc("/api/{user:[0-9]+}", Hello)

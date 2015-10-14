@@ -98,9 +98,8 @@ func getCommitComparison(client *github.Client) []Commit {
 
 	var commits []Commit
 	for _, value := range repos.Commits {
-		commits = append(commits, Commit{*value.SHA, "test", "hello"})
+		commits = append(commits, Commit{*value.SHA, *value.Message[0:20], "hello"})
 	}
-	commits = append(commits, Commit{"testing", "test", "hello"})
 	return commits
 }
 

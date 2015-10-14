@@ -22,9 +22,9 @@ type Release struct {
 }
 
 type Commit struct {
-	Sha       string
-	Message   string
-	Committer string
+	Sha     string
+	Message string
+	Author  string
 }
 
 func Hello(w http.ResponseWriter, r *http.Request) {

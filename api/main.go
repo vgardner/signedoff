@@ -17,8 +17,14 @@ type API struct {
 }
 
 type Release struct {
-	releaseId string
-	commits   []github.RepositoryCommit
+	ReleaseId string
+	Commits   []Commit
+}
+
+type Commit struct {
+	Sha      string
+	Message  string
+	Commiter string
 }
 
 func Hello(w http.ResponseWriter, r *http.Request) {
@@ -37,9 +43,15 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
+
+	client := getAuthenticatedGitHubClient()
+
 	var release = Release{}
-	release.commits = getCommitComparison(client)
-	fmt.Fprintf(w, "test")
+	release.ReleaseId = "release1"
+	release.Commits = getCommitComparison(client)
+	//fmt.Println(release.Commits)
+	json.NewEncoder(w).Encode(release.Commits)
+	//fmt.Fprintf(w, release.commits[4].sha)
 }
 
 func getAuthenticatedGitHubClient() *github.Client {
@@ -80,15 +92,16 @@ func getRepositoryTags(client *github.Client) {
 	fmt.Println(s)
 }
 
-func getCommitComparison(client *github.Client) []github.RepositoryCommit {
+func getCommitComparison(client *github.Client) []Commit {
 	//list all repositories for the authenticated user
 	repos, _, _ := client.Repositories.CompareCommits("EconomistDigitalSolutions", "website", "release-296.0", "release-297.0")
 
-	var s []string
+	var commits []Commit
 	for _, value := range repos.Commits {
-		s = append(s, *value.SHA)
+		commits = append(commits, Commit{*value.SHA, "test", "hello"})
 	}
-	return repos.Commits
+	commits = append(commits, Commit{"testing", "test", "hello"})
+	return commits
 }
 
 func main() {

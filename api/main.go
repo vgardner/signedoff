@@ -22,9 +22,9 @@ type Release struct {
 }
 
 type Commit struct {
-	Sha      string
-	Message  string
-	Commiter string
+	Sha       string
+	Message   string
+	Committer string
 }
 
 func Hello(w http.ResponseWriter, r *http.Request) {
@@ -98,7 +98,8 @@ func getCommitComparison(client *github.Client) []Commit {
 
 	var commits []Commit
 	for _, value := range repos.Commits {
-		commits = append(commits, Commit{*value.SHA, *value.Message[0:20], "hello"})
+		message := *value.Commit.Message
+		commits = append(commits, Commit{*value.SHA, message[0:20], *value.Commit.Author.Name})
 	}
 	return commits
 }

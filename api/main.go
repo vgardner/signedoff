@@ -73,7 +73,7 @@ func getRepositoryTags(client *github.Client) {
 	fmt.Println(s)
 }
 
-func getCommitComparison(client *github.Client) {
+func getCommitComparison(client *github.Client) []github.RepositoryCommit {
 	//list all repositories for the authenticated user
 	repos, _, _ := client.Repositories.CompareCommits("EconomistDigitalSolutions", "website", "release-296.0", "release-297.0")
 
@@ -81,7 +81,12 @@ func getCommitComparison(client *github.Client) {
 	for _, value := range repos.Commits {
 		s = append(s, *value.SHA)
 	}
-	fmt.Println(s)
+	return repos.Commits
+}
+
+type Release struct {
+	releaseId string
+	commits   []github.RepositoryCommit
 }
 
 func main() {
@@ -91,12 +96,14 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	var release = Release{}
+
 	client := getAuthenticatedGitHubClient()
 	getRepositoryData(client)
 
 	getRepositoryTags(client)
 
-	getCommitComparison(client)
+	release.commits = getCommitComparison(client)
 
 	gorillaRoute := mux.NewRouter()
 	gorillaRoute.HandleFunc("/api/{user:[0-9]+}", Hello)

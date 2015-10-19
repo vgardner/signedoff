@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type API struct {
@@ -45,12 +46,38 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
 
 	client := getAuthenticatedGitHubClient()
+	releases := []Release{}
 
-	var release = Release{}
-	release.ReleaseId = "release1"
-	release.Commits = getCommitComparison(client)
+	tags := getRepositoryTags(client)
+	tagCounter := 0
+	var lastTagName string
+
+	for _, value := range tags {
+		tagCounter++
+
+		if tagCounter == 1 {
+			lastTagName = *value.Name
+			continue
+		}
+
+		releaseNames := []string{*value.Name, lastTagName}
+		releaseName := strings.Join(releaseNames, "-")
+
+		commits, err := getCommitComparison(client, *value.Name, lastTagName)
+		if err != nil {
+			fmt.Println("Houston we have an error")
+			continue
+		}
+
+		releases = append(releases, Release{releaseName, commits})
+		lastTagName = *value.Name
+	}
+
+	//var release = Release{}
+	//release.ReleaseId = "release1"
+	//release.Commits = getCommitComparison(client)
 	//fmt.Println(release.Commits)
-	json.NewEncoder(w).Encode(release.Commits)
+	json.NewEncoder(w).Encode(releases)
 	//fmt.Fprintf(w, release.commits[4].sha)
 }
 
@@ -81,7 +108,7 @@ func getRepositoryData(client *github.Client) {
 	fmt.Println(owner)
 }
 
-func getRepositoryTags(client *github.Client) {
+func getRepositoryTags(client *github.Client) []github.RepositoryTag {
 	//list all repositories for the authenticated user
 	repos, _, _ := client.Repositories.ListTags("EconomistDigitalSolutions", "website", nil)
 
@@ -90,18 +117,23 @@ func getRepositoryTags(client *github.Client) {
 		s = append(s, *value.Name)
 	}
 	fmt.Println(s)
+	return repos
 }
 
-func getCommitComparison(client *github.Client) []Commit {
+func getCommitComparison(client *github.Client, branch1 string, branch2 string) ([]Commit, error) {
 	//list all repositories for the authenticated user
-	repos, _, _ := client.Repositories.CompareCommits("EconomistDigitalSolutions", "website", "release-296.0", "release-297.0")
+	repos, _, err := client.Repositories.CompareCommits("EconomistDigitalSolutions", "website", branch1, branch2)
+
+	if err != nil {
+		return nil, err
+	}
 
 	var commits []Commit
 	for _, value := range repos.Commits {
 		message := *value.Commit.Message
-		commits = append(commits, Commit{*value.SHA, message[0:20], *value.Commit.Author.Name})
+		commits = append(commits, Commit{*value.SHA, message, *value.Commit.Author.Name})
 	}
-	return commits
+	return commits, nil
 }
 
 func main() {

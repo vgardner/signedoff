@@ -44,7 +44,12 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
+	var releases []Release
+	releases = getReleases()
+	json.NewEncoder(w).Encode(releases)
+}
 
+func getReleases() []Release {
 	client := getAuthenticatedGitHubClient()
 	releases := []Release{}
 
@@ -60,6 +65,12 @@ func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
+		//Remove this later
+		if tagCounter == 6 {
+			lastTagName = *value.Name
+			break
+		}
+
 		releaseNames := []string{*value.Name, lastTagName}
 		releaseName := strings.Join(releaseNames, "-")
 
@@ -72,13 +83,7 @@ func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
 		releases = append(releases, Release{releaseName, commits})
 		lastTagName = *value.Name
 	}
-
-	//var release = Release{}
-	//release.ReleaseId = "release1"
-	//release.Commits = getCommitComparison(client)
-	//fmt.Println(release.Commits)
-	json.NewEncoder(w).Encode(releases)
-	//fmt.Fprintf(w, release.commits[4].sha)
+	return releases
 }
 
 func getAuthenticatedGitHubClient() *github.Client {
@@ -93,10 +98,8 @@ func getAuthenticatedGitHubClient() *github.Client {
 }
 
 func getRepositoryData(client *github.Client) {
-
 	// list all repositories for the authenticated user
 	repos, _, _ := client.Repositories.List("", nil)
-	//orgs, _, _ := client.Organizations.List("vgardner", nil)
 
 	var s []string
 	var owner []string
@@ -104,25 +107,23 @@ func getRepositoryData(client *github.Client) {
 		s = append(s, *value.FullName)
 		owner = append(owner, *value.Owner.Login)
 	}
-	fmt.Println(s)
 	fmt.Println(owner)
 }
 
 func getRepositoryTags(client *github.Client) []github.RepositoryTag {
 	//list all repositories for the authenticated user
-	repos, _, _ := client.Repositories.ListTags("EconomistDigitalSolutions", "website", nil)
+	repos, _, _ := client.Repositories.ListTags("vgardner", "go-lights", nil)
 
 	var s []string
 	for _, value := range repos {
 		s = append(s, *value.Name)
 	}
-	fmt.Println(s)
 	return repos
 }
 
 func getCommitComparison(client *github.Client, branch1 string, branch2 string) ([]Commit, error) {
 	//list all repositories for the authenticated user
-	repos, _, err := client.Repositories.CompareCommits("EconomistDigitalSolutions", "website", branch1, branch2)
+	repos, _, err := client.Repositories.CompareCommits("vgardner", "go-lights", branch1, branch2)
 
 	if err != nil {
 		return nil, err

@@ -24,23 +24,21 @@ type Commit struct {
 	Author  string
 }
 
-func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
+func releaseEndpointHandler(w http.ResponseWriter, r *http.Request) {
 	urlParams := mux.Vars(r)
 	userName := urlParams["user"]
-	repoName := urlParams["repo"]
-
-	fmt.Println("test-" + userName + repoName)
+	repositoryName := urlParams["repo"]
 
 	var releases []Release
-	releases = getReleases()
+	releases = getReleases(userName, repositoryName)
 	json.NewEncoder(w).Encode(releases)
 }
 
-func getReleases() []Release {
+func getReleases(userName string, repositoryName string) []Release {
 	client := getAuthenticatedGitHubClient()
 	releases := []Release{}
 
-	tags := getRepositoryTags(client)
+	tags := getRepositoryTags(client, userName, repositoryName)
 	tagCounter := 0
 	var lastTagName string
 
@@ -61,7 +59,7 @@ func getReleases() []Release {
 		releaseNames := []string{*value.Name, lastTagName}
 		releaseName := strings.Join(releaseNames, "-")
 
-		commits, err := getCommitComparison(client, *value.Name, lastTagName)
+		commits, err := getCommitComparison(client, userName, repositoryName, *value.Name, lastTagName)
 		if err != nil {
 			fmt.Println("Houston we have an error")
 			continue
@@ -84,8 +82,7 @@ func getAuthenticatedGitHubClient() *github.Client {
 	return client
 }
 
-func getRepositoryData(client *github.Client) {
-	// list all repositories for the authenticated user
+func getRepositories(client *github.Client) {
 	repos, _, _ := client.Repositories.List("", nil)
 
 	var s []string
@@ -97,9 +94,9 @@ func getRepositoryData(client *github.Client) {
 	fmt.Println(owner)
 }
 
-func getRepositoryTags(client *github.Client) []github.RepositoryTag {
-	//list all repositories for the authenticated user
-	repos, _, _ := client.Repositories.ListTags("vgardner", "go-lights", nil)
+func getRepositoryTags(client *github.Client, userName string, repositoryName string) []github.RepositoryTag {
+
+	repos, _, _ := client.Repositories.ListTags(userName, repositoryName, nil)
 
 	var s []string
 	for _, value := range repos {
@@ -108,9 +105,8 @@ func getRepositoryTags(client *github.Client) []github.RepositoryTag {
 	return repos
 }
 
-func getCommitComparison(client *github.Client, branch1 string, branch2 string) ([]Commit, error) {
-	//list all repositories for the authenticated user
-	repos, _, err := client.Repositories.CompareCommits("vgardner", "go-lights", branch1, branch2)
+func getCommitComparison(client *github.Client, userName string, repositoryName string, branch1 string, branch2 string) ([]Commit, error) {
+	repos, _, err := client.Repositories.CompareCommits(userName, repositoryName, branch1, branch2)
 
 	if err != nil {
 		return nil, err
@@ -125,20 +121,14 @@ func getCommitComparison(client *github.Client, branch1 string, branch2 string) 
 }
 
 func main() {
-	// Load vars
+	// Load vars.
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	client := getAuthenticatedGitHubClient()
-	getRepositoryData(client)
-
-	getRepositoryTags(client)
-
 	gorillaRoute := mux.NewRouter()
-	gorillaRoute.HandleFunc("/api/{user:[0-9]+}", Hello)
-	gorillaRoute.HandleFunc("/api/releases/{user:[a-z0-9-]+}/{repo:[a-z0-9-]+}", getRepositoryInfo)
+	gorillaRoute.HandleFunc("/api/releases/{user:[a-zA-Z0-9-]+}/{repo:[a-zA-Z0-9-]+}", releaseEndpointHandler)
 	http.Handle("/", gorillaRoute)
 	http.ListenAndServe(":3001", nil)
 }

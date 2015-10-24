@@ -44,6 +44,9 @@ func Hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	name := urlParams["user"]
+
 	var releases []Release
 	releases = getReleases()
 	json.NewEncoder(w).Encode(releases)
@@ -151,7 +154,7 @@ func main() {
 
 	gorillaRoute := mux.NewRouter()
 	gorillaRoute.HandleFunc("/api/{user:[0-9]+}", Hello)
-	gorillaRoute.HandleFunc("/api/repo/{repo:[a-z]+}", getRepositoryInfo)
+	gorillaRoute.HandleFunc("/api/releases/{user:[a-z0-9]+}/{repo:[a-z0-9]+}", getRepositoryInfo)
 	http.Handle("/", gorillaRoute)
 	http.ListenAndServe(":3001", nil)
 }

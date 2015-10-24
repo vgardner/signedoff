@@ -13,10 +13,6 @@ import (
 	"strings"
 )
 
-type API struct {
-	Message string "json:message"
-}
-
 type Release struct {
 	ReleaseId string
 	Commits   []Commit
@@ -28,24 +24,12 @@ type Commit struct {
 	Author  string
 }
 
-func Hello(w http.ResponseWriter, r *http.Request) {
-	urlParams := mux.Vars(r)
-	name := urlParams["user"]
-	HelloMessage := "Hello, " + name
-
-	message := API{HelloMessage}
-	output, err := json.Marshal(message)
-
-	if err != nil {
-		fmt.Println("Something went wrong!")
-	}
-
-	fmt.Fprintf(w, string(output))
-}
-
 func getRepositoryInfo(w http.ResponseWriter, r *http.Request) {
 	urlParams := mux.Vars(r)
-	name := urlParams["user"]
+	userName := urlParams["user"]
+	repoName := urlParams["repo"]
+
+	fmt.Println("test-" + userName + repoName)
 
 	var releases []Release
 	releases = getReleases()
@@ -154,7 +138,7 @@ func main() {
 
 	gorillaRoute := mux.NewRouter()
 	gorillaRoute.HandleFunc("/api/{user:[0-9]+}", Hello)
-	gorillaRoute.HandleFunc("/api/releases/{user:[a-z0-9]+}/{repo:[a-z0-9]+}", getRepositoryInfo)
+	gorillaRoute.HandleFunc("/api/releases/{user:[a-z0-9-]+}/{repo:[a-z0-9-]+}", getRepositoryInfo)
 	http.Handle("/", gorillaRoute)
 	http.ListenAndServe(":3001", nil)
 }

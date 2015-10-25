@@ -10,8 +10,5 @@ router.get('/helloworld', function(req, res, next) {
   res.render('helloworld', { title: 'Hello World' });
 });
 
-router.get('/testing', function(req, res, next) {
-  res.send("that's all folks");
-});
 
 module.exports = router;

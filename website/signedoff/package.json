@@ -20,6 +20,7 @@
     "react": "^0.14.0",
     "react-tools": "^0.13.3",
     "reactify": "^1.1.1",
+    "request": "^2.65.0",
     "vinyl-source-stream": "^1.1.0"
   }
 }

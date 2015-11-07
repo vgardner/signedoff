@@ -1,10 +1,15 @@
 signedoff.io API
 ================
-#API Endpoints
+##Installation
+- [golang.org]
 
-        /user
+##Commands
+Start Application ``go run main.go``
 
-#Updating dependencies using Godep
+##Running
+The API will run on ``http://localhost:3001``
+
+##Updating dependencies using Godep
 
         go get github.com/gorilla/mux
         godep save
@@ -13,3 +18,18 @@ signedoff.io API
 For more info, here's a good step-by-step on Godep:
 
 * [Godep Tutorial](http://www.goinggo.net/2013/10/manage-dependencies-with-godep.html)
+
+##API Endpoints
+- /releases/[username]/[repository]
+- /release/[username]/[repository]/[releasename]
+- /users
+- /user/[username]
+- /settings
+- /builds/[username]/[repository]
+- /action/signoff/[releasename]/[build]/[commit]
+- /action/comment/[releasename]/[build]/[commit]
+- /action/add/[build]
+
+
+
+

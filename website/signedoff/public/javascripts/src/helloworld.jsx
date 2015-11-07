@@ -30,7 +30,8 @@ module.exports = React.createClass({
   render: function(){
     return (
       <div className="filter-list">
-      <List items={this.state.items}/>
+      <Title title={this.props.releaseid}/>
+      <List items={this.props.items}/>
       </div>
     );
   }
@@ -49,4 +50,13 @@ var List = React.createClass({
     )
   }
 });
+
+var Title = React.createClass({
+  render: function(){
+    return (
+      <div>{this.props.title}</div>
+    )
+  }
+});
+
 

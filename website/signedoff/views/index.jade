@@ -4,5 +4,5 @@ block content
   h1= title
   p Welcomex to #{title}
   #example test
-  script(type='application/json').
-    !{JSON.stringify(releaseData)}
+  script(type='application/json', id='initial-state').
+    !{releaseData}

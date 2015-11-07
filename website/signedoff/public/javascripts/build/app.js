@@ -19007,7 +19007,8 @@ module.exports = React.createClass({displayName: "exports",
   render: function(){
     return (
       React.createElement("div", {className: "filter-list"}, 
-      React.createElement(List, {items: this.state.items})
+      React.createElement(Title, {title: this.props.releaseid}), 
+      React.createElement(List, {items: this.props.items})
       )
     );
   }
@@ -19027,12 +19028,35 @@ var List = React.createClass({displayName: "List",
   }
 });
 
+var Title = React.createClass({displayName: "Title",
+  render: function(){
+    return (
+      React.createElement("div", null, this.props.title)
+    )
+  }
+});
+
 },{"react":156}],158:[function(require,module,exports){
 var React = require('react');
 var HelloWorld = require('./HelloWorld.jsx');
 
+// Snag the initial state that was passed from the server side
+var initialState = JSON.parse(document.getElementById('initial-state').innerHTML)
+var initialState2 = [
+         "Vin",
+         "Test",
+         "Chicken",
+         "Duck",
+         "Eggs",
+         "Fish",
+         "Granola",
+         "Hash Browns"
+       ];
+
+var releaseId = initialState[0].ReleaseId;
+
 React.render(
-    React.createElement(HelloWorld, null),
+    React.createElement(HelloWorld, {items: initialState2, releaseid: initialState[1].ReleaseId}),
     document.getElementById('example')
 );
 

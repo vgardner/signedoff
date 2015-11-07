@@ -1,8 +1,0 @@
-extends layout
-
-block content
-  h1= title
-  p Below is a list of releases for #{title}
-  #releases
-  script(type='application/json', id='initial-state').
-    !{releaseData}

@@ -130,5 +130,10 @@ func main() {
 	gorillaRoute := mux.NewRouter()
 	gorillaRoute.HandleFunc("/api/releases/{user:[a-zA-Z0-9-]+}/{repo:[a-zA-Z0-9-]+}", releaseEndpointHandler)
 	http.Handle("/", gorillaRoute)
-	http.ListenAndServe(":3001", nil)
+
+	serverErr := http.ListenAndServe(":3002", nil)
+	if serverErr != nil {
+		log.Fatal(serverErr)
+	}
+
 }

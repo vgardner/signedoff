@@ -7,7 +7,7 @@ signedoff.io API
 Start Application ``go run main.go``
 
 ##Running
-The API will run on ``http://localhost:3001``
+The API will run on ``http://localhost:3002``
 
 ##Updating dependencies using Godep
 

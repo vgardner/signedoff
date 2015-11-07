@@ -11,9 +11,8 @@ router.get('/', function(req, res, next) {
 router.get('/vgardner/go-lights', function(req, res, next) {
 
   request("http://localhost:3001/api/releases/vgardner/go-lights", function(error, response, body) {
-  console.log(body);
-  });
-  res.send('I am Vin\'s repo!');
+    res.render('index', { title: 'Express', releaseData: body });
+   });
 });
 
 router.get('/dev', function(req, res, next) {

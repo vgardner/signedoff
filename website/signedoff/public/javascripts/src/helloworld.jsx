@@ -1,9 +1,52 @@
 var React = require('react');
 
 module.exports = React.createClass({
-render: function() {
+  filterList: function(event){
+    var updatedList = this.state.initialItems;
+    updatedList = updatedList.filter(function(item){
+      return item.toLowerCase().search(
+        event.target.value.toLowerCase()) !== -1;
+    });
+    this.setState({items: updatedList});
+  },
+  getInitialState: function(){
+     return {
+       initialItems: [
+         "Apples",
+         "Broccoli",
+         "Chicken",
+         "Duck",
+         "Eggs",
+         "Fish",
+         "Granola",
+         "Hash Browns"
+       ],
+       items: []
+     }
+  },
+  componentWillMount: function(){
+    this.setState({items: this.state.initialItems})
+  },
+  render: function(){
     return (
-    <h1>Hello, world from a React.js Component!</h1>
-    )
-}
+      <div className="filter-list">
+      <List items={this.state.items}/>
+      </div>
+    );
+  }
 });
+
+var List = React.createClass({
+  render: function(){
+    return (
+      <ul>
+      {
+        this.props.items.map(function(item) {
+          return <li key={item}>{item}</li>
+        })
+       }
+      </ul>
+    )
+  }
+});
+

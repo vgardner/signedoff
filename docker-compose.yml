@@ -3,3 +3,6 @@ signedoff_api:
   ports:
    - 3002:3002
   env_file: .env
+  hostname: signedoff-api
+  domainname: vingardner.com
+

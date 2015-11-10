@@ -1,6 +1,5 @@
 signedoff_api:
   build: .
   ports:
-   - "3002:3002"
-  env_file:
-    - .env
+   - 3002:3002
+  env_file: .env

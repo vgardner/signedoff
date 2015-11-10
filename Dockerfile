@@ -13,6 +13,6 @@ COPY . ./
 RUN go get github.com/tools/godep
 RUN godep go build
 
-EXPOSE 3000
+EXPOSE 3002
 
-CMD ["./app", "-port", "3000"]
+CMD ["./app", "-port", "3002"]

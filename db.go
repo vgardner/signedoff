@@ -28,14 +28,14 @@ func saveObject(collectionName string, object interface{}) {
 	}
 }
 
-func getObject(collectionName string, name string) interface{} {
+func getObject(collectionName string, bsonObject bson.M) interface{} {
 	session := getDbSession()
 	defer session.Close()
 
 	collection := session.DB(DBNAME).C(collectionName)
 
 	var result interface{}
-	err := collection.Find(bson.M{"name": name}).One(&result)
+	err := collection.Find(bsonObject).One(&result)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,7 +49,7 @@ func dbTest(w http.ResponseWriter, r *http.Request) {
 
 	saveObject("people", &Person{userName, "+55 53 8116 9639"})
 
-	result := getObject("people", userName)
+	result := getObject("people", bson.M{"name": userName})
 
 	json.NewEncoder(w).Encode(result)
 }

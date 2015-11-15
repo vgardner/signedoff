@@ -12,11 +12,13 @@ import (
 )
 
 type Release struct {
+	Key       string
 	ReleaseId string
 	Commits   []Commit
 }
 
 type Commit struct {
+	Key     string
 	Sha     string
 	Message string
 	Author  string
@@ -32,7 +34,7 @@ func getCommitComparison(client *github.Client, userName string, repositoryName 
 	var commits []Commit
 	for _, value := range repos.Commits {
 		message := *value.Commit.Message
-		commits = append(commits, Commit{*value.SHA, message, *value.Commit.Author.Name})
+		commits = append(commits, Commit{*value.SHA, *value.SHA, message, *value.Commit.Author.Name})
 	}
 	return commits, nil
 }
@@ -102,7 +104,7 @@ func getReleases(userName string, repositoryName string) []Release {
 			continue
 		}
 
-		releases = append(releases, Release{releaseName, commits})
+		releases = append(releases, Release{releaseName, releaseName, commits})
 		lastTagName = *value.Name
 	}
 	return releases
@@ -115,5 +117,7 @@ func releaseEndpointHandler(w http.ResponseWriter, r *http.Request) {
 
 	var releases []Release
 	releases = getReleases(userName, repositoryName)
+
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(releases)
 }

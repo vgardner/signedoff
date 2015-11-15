@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/google/go-github/github"
+	"github.com/gorilla/mux"
 	"golang.org/x/oauth2"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -103,4 +106,14 @@ func getReleases(userName string, repositoryName string) []Release {
 		lastTagName = *value.Name
 	}
 	return releases
+}
+
+func releaseEndpointHandler(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	userName := urlParams["user"]
+	repositoryName := urlParams["repo"]
+
+	var releases []Release
+	releases = getReleases(userName, repositoryName)
+	json.NewEncoder(w).Encode(releases)
 }

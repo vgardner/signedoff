@@ -14,12 +14,21 @@ type User struct {
 	Created   int
 }
 
-func userEndpointHandler(w http.ResponseWriter, r *http.Request) {
+func getUserEndpointHandler(w http.ResponseWriter, r *http.Request) {
 	urlParams := mux.Vars(r)
 	userName := urlParams["user"]
 
 	var user User
 	user = getUser(userName)
+	json.NewEncoder(w).Encode(user)
+}
+
+func postUserEndpointHandler(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	userName := urlParams["user"]
+
+	var user User
+	user = getUser("Not saving this guy " + userName)
 	json.NewEncoder(w).Encode(user)
 }
 

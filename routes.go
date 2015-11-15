@@ -16,10 +16,12 @@ func getRouter() *mux.Router {
 	// User endpoints.
 	// GET - Index User endpoint.
 	gorillaRoute.HandleFunc("/api/user", userIndexEndpointHandler).Methods("GET")
+	// GET - Index User endpoint.
+	gorillaRoute.HandleFunc("/api/user", postUserEndpointHandler).Methods("POST")
 	// GET - Route for user endpoint.
 	gorillaRoute.HandleFunc("/api/user/{user:[a-zA-Z0-9-]+}", getUserEndpointHandler).Methods("GET")
 	// POST - Route for user endpoint.
-	gorillaRoute.HandleFunc("/api/user/{user:[a-zA-Z0-9-]+}", postUserEndpointHandler).Methods("POST")
+	gorillaRoute.HandleFunc("/api/user/{user:[a-zA-Z0-9-]+}", putUserEndpointHandler).Methods("POST, PUT")
 
 	// POST - Route for user endpoint.
 	gorillaRoute.HandleFunc("/db/{user:[a-zA-Z0-9-]+}", dbTestHandler).Methods("POST")

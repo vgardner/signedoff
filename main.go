@@ -8,17 +8,6 @@ import (
 	"net/http"
 )
 
-type Release struct {
-	ReleaseId string
-	Commits   []Commit
-}
-
-type Commit struct {
-	Sha     string
-	Message string
-	Author  string
-}
-
 func init() {
 	// Load vars.
 	err := godotenv.Load()
@@ -28,9 +17,13 @@ func init() {
 }
 
 func main() {
-
 	gorillaRoute := mux.NewRouter()
+
+	// Route for project release endpoint.
 	gorillaRoute.HandleFunc("/api/releases/{user:[a-zA-Z0-9-]+}/{repo:[a-zA-Z0-9-]+}", releaseEndpointHandler)
+	// Route for user endpooint.
+	gorillaRoute.HandleFunc("/api/user/{user:[a-zA-Z0-9-]+}", userEndpointHandler)
+
 	http.Handle("/", gorillaRoute)
 
 	serverErr := http.ListenAndServe(":3002", nil)

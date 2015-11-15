@@ -8,6 +8,17 @@ import (
 	"strings"
 )
 
+type Release struct {
+	ReleaseId string
+	Commits   []Commit
+}
+
+type Commit struct {
+	Sha     string
+	Message string
+	Author  string
+}
+
 func getCommitComparison(client *github.Client, userName string, repositoryName string, branch1 string, branch2 string) ([]Commit, error) {
 	repos, _, err := client.Repositories.CompareCommits(userName, repositoryName, branch1, branch2)
 

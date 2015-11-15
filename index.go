@@ -3,14 +3,13 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 )
 
 type Index struct {
-	User     string
-	Releases string
-	Surname  string
-	Role     string
-	Created  int
+	Hostname    string
+	UserUrl     string
+	ReleasesUrl string
 }
 
 func indexEndpointHandler(w http.ResponseWriter, r *http.Request) {
@@ -25,11 +24,17 @@ func getIndex() Index {
 	var user Index
 
 	user = Index{
-		User:     "Vin",
-		Releases: "Gardner",
-		Role:     "God",
-		Created:  12344,
+		Hostname:    "http://" + hostname,
+		UserUrl:     url("api/user"),
+		ReleasesUrl: url("api/releases"),
 	}
 
 	return user
+}
+
+func url(path string) string {
+	var url string
+	hostname, _ := os.Hostname()
+	url = "http://" + hostname + "/" + path
+	return url
 }

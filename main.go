@@ -6,6 +6,8 @@ import (
 	"net/http"
 )
 
+const HOSTPORT = ":3002"
+
 func init() {
 	// Load environment variables from .env file.
 	err := godotenv.Load()
@@ -18,7 +20,7 @@ func main() {
 	// Start router.
 	http.Handle("/", getRouter())
 
-	serverErr := http.ListenAndServe(":3002", nil)
+	serverErr := http.ListenAndServe(HOSTPORT, nil)
 	if serverErr != nil {
 		log.Fatal(serverErr)
 	}

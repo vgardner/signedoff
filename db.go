@@ -43,17 +43,6 @@ func getObject(collectionName string, bsonObject bson.M) interface{} {
 	return result
 }
 
-func dbTest(w http.ResponseWriter, r *http.Request) {
-	urlParams := mux.Vars(r)
-	userName := urlParams["user"]
-
-	saveObject("people", &Person{userName, "+55 53 8116 9639"})
-
-	result := getObject("people", bson.M{"name": userName})
-
-	json.NewEncoder(w).Encode(result)
-}
-
 func getDbSession() *mgo.Session {
 	// Start session.
 	session, err := mgo.Dial(DBHOST)
@@ -64,4 +53,16 @@ func getDbSession() *mgo.Session {
 	session.SetMode(mgo.Monotonic, true)
 
 	return session
+}
+
+// Remove at some point.
+func dbTestHandler(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	userName := urlParams["user"]
+
+	saveObject("people", &Person{userName, "+55 53 8116 9639"})
+
+	result := getObject("people", bson.M{"name": userName})
+
+	json.NewEncoder(w).Encode(result)
 }

@@ -40,5 +40,5 @@ func url(path string) string {
 
 func baseUrl() string {
 	hostname, _ := os.Hostname()
-	return "http://" + hostname
+	return "http://" + hostname + HOSTPORT
 }

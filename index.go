@@ -24,7 +24,7 @@ func getIndex() Index {
 	var user Index
 
 	user = Index{
-		Hostname:    "http://" + hostname,
+		Hostname:    baseUrl(),
 		UserUrl:     url("api/user"),
 		ReleasesUrl: url("api/releases"),
 	}
@@ -34,7 +34,11 @@ func getIndex() Index {
 
 func url(path string) string {
 	var url string
-	hostname, _ := os.Hostname()
-	url = "http://" + hostname + "/" + path
+	url = baseUrl() + "/" + path
 	return url
+}
+
+func baseUrl() string {
+	hostname, _ := os.Hostname()
+	return "http://" + hostname
 }

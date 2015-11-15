@@ -19,5 +19,8 @@ func getRouter() *mux.Router {
 	// POST - Route for user endpoint.
 	gorillaRoute.HandleFunc("/api/user/{user:[a-zA-Z0-9-]+}", postUserEndpointHandler).Methods("POST")
 
+	// POST - Route for user endpoint.
+	gorillaRoute.HandleFunc("/db/{user:[a-zA-Z0-9-]+}", dbTest).Methods("POST")
+
 	return gorillaRoute
 }

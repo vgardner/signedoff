@@ -10,7 +10,7 @@ import (
 )
 
 const DBNAME = "signedoff"
-const DBHOST = "localhost:4444"
+const DBHOST = "mongo:27017"
 
 type Person struct {
 	Name  string

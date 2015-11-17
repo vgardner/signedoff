@@ -1,6 +1,6 @@
 {
-	"ImportPath": "github.com/vgardner/signedoff/api",
-	"GoVersion": "go1.5",
+	"ImportPath": "github.com/vgardner/signedoff-api",
+	"GoVersion": "go1.5.1",
 	"Deps": [
 		{
 			"ImportPath": "github.com/google/go-github/github",
@@ -30,6 +30,11 @@
 		{
 			"ImportPath": "golang.org/x/oauth2",
 			"Rev": "2fbf3d7329d847b125188ad64b68cfb1f548938a"
+		},
+		{
+			"ImportPath": "gopkg.in/mgo.v2",
+			"Comment": "r2015.10.05-1-g4d04138",
+			"Rev": "4d04138ffef2791c479c0c8bbffc30b34081b8d9"
 		}
 	]
 }

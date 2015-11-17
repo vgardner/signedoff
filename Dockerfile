@@ -11,7 +11,6 @@ COPY . ./
 # Install dependencies through go get, unless you vendored them in your repository before
 # Vendoring can be done through the godeps tool or Go vendoring available with
 RUN go get github.com/tools/godep
-RUN godep restore
 RUN godep go build
 
 EXPOSE 3002

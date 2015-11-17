@@ -5,4 +5,12 @@ signedoff_api:
   env_file: .env
   hostname: signedoff-api
   domainname: vingardner.com
-
+  links:
+   - mongo
+mongo:
+  build: mongo
+  ports:
+   - "27017:27017"
+  env_file: .env
+  hostname: mongo
+  domainname: vingardner.com

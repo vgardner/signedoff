@@ -1,0 +1,34 @@
+#%RAML 0.8
+title: gref
+version: 1
+
+baseUri: http://github.com/buddhamagnet/ramlapi
+documentation:
+  -  title: Overview
+
+/testapi:
+  description: Test API for the ramlapi package.
+  get:
+    displayName: get.
+    queryParameters:
+      Country:
+        type: string
+        description: User country code
+        example: GB
+        required: true
+        pattern: "[a-z]{2}"
+      City:
+        type: string
+        description: User city name
+        example: Adelaide
+        required: false
+  post:
+    displayName: post
+  put:
+    displayName: put
+  patch:
+    displayName: patch
+  head:
+    displayName: head
+  delete:
+    displayName: delete

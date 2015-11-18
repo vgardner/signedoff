@@ -12,7 +12,12 @@ type Index struct {
 	ReleasesUrl string
 }
 
-func indexEndpointHandler(w http.ResponseWriter, r *http.Request) {
+var RouteMap = map[string]http.HandlerFunc{
+
+	"Root": IndexEndpointHandler,
+}
+
+func IndexEndpointHandler(w http.ResponseWriter, r *http.Request) {
 	var user Index
 	user = getIndex()
 	w.Header().Set("Content-Type", "application/json")
@@ -40,5 +45,5 @@ func url(path string) string {
 
 func baseUrl() string {
 	hostname, _ := os.Hostname()
-	return "http://" + hostname + HOSTPORT
+	return "http://" + hostname + ":3002"
 }

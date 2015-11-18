@@ -1,7 +1,20 @@
 {
 	"ImportPath": "github.com/vgardner/signedoff-api",
-	"GoVersion": "go1.5.1",
+	"GoVersion": "go1.5",
 	"Deps": [
+		{
+			"ImportPath": "github.com/EconomistDigitalSolutions/ramlapi",
+			"Comment": "1.0.1-2-g42c0f39",
+			"Rev": "42c0f39c0fadfb111d97cdb19a44321802c3a5b8"
+		},
+		{
+			"ImportPath": "github.com/buddhamagnet/raml",
+			"Rev": "396f76ddca3fd297d722114be47112bf2ce8d509"
+		},
+		{
+			"ImportPath": "github.com/buddhamagnet/yaml",
+			"Rev": "e401b2b026855a4fa8e7014d553ae5bdfccb21cd"
+		},
 		{
 			"ImportPath": "github.com/google/go-github/github",
 			"Rev": "2570a87f54b43ed0957cabd7a0819f0dab85217b"

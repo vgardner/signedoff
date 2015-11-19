@@ -9,6 +9,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/gorilla/mux"
+	"github.com/vgardner/signedoff-api/apis"
 	"github.com/vgardner/signedoff-api/db"
 	"github.com/vgardner/signedoff-api/models"
 )
@@ -85,4 +86,16 @@ func DBTest(w http.ResponseWriter, r *http.Request) {
 	result := db.GetObject("people", bson.M{"name": userName})
 
 	json.NewEncoder(w).Encode(result)
+}
+
+func releaseEndpointHandler(w http.ResponseWriter, r *http.Request) {
+	URLParams := mux.Vars(r)
+	userName := URLParams["user"]
+	repositoryName := URLParams["repo"]
+
+	var releases []apis.Release
+	releases = apis.GetReleases(userName, repositoryName)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(releases)
 }

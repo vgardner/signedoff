@@ -9,12 +9,14 @@ import (
 	"golang.org/x/oauth2"
 )
 
+// Release represents a release.
 type Release struct {
 	Key       string
-	ReleaseId string
+	ReleaseID string
 	Commits   []Commit
 }
 
+// Commit represents a git commit.
 type Commit struct {
 	Key     string
 	Sha     string
@@ -22,6 +24,7 @@ type Commit struct {
 	Author  string
 }
 
+// GetReleases returns a collection of releases.
 func GetReleases(userName string, repositoryName string) []Release {
 	client := getAuthenticatedGitHubClient()
 	releases := []Release{}

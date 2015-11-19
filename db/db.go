@@ -7,14 +7,19 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// DBNAME represents the database name.
 const DBNAME = "signedoff"
+
+// DBHOST represents the database host.
 const DBHOST = "mongo:27017"
 
+// Person represents a person.
 type Person struct {
 	Name  string
 	Phone string
 }
 
+// SaveObject persists a value to the database.
 func SaveObject(collectionName string, object interface{}) {
 	session := getDBSession()
 	defer session.Close()
@@ -26,6 +31,7 @@ func SaveObject(collectionName string, object interface{}) {
 	}
 }
 
+// GetObject retrieves a value from the database.
 func GetObject(collectionName string, bsonObject bson.M) interface{} {
 	session := getDBSession()
 	defer session.Close()

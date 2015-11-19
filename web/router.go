@@ -12,6 +12,7 @@ import (
 
 var router *mux.Router
 
+// NewRouter wires up the middleware and routes.
 func NewRouter() {
 	router = mux.NewRouter().StrictSlash(true)
 	assembleMiddleware()

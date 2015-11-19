@@ -14,29 +14,20 @@ import (
 	"github.com/vgardner/signedoff-api/models"
 )
 
-type Index struct {
-	Hostname    string
-	UserUrl     string
-	ReleasesUrl string
-}
-
+// RouteMap maps RAML displayNames to handlers.
 var RouteMap = map[string]http.HandlerFunc{
-
-	"Root":      Root,
+	"Root":      root,
 	"UserIndex": userIndex,
 	"UserPost":  userPost,
 	"UserGet":   userGet,
 	"UserPut":   userPut,
-	"DBTest":    DBTest,
+	"DBTest":    dbTest,
 }
 
-func Root(w http.ResponseWriter, r *http.Request) {
-	user := Index{
-		Hostname:    baseURL(),
-		UserUrl:     URL("api/user"),
-		ReleasesUrl: URL("api/releases"),
-	}
-	json.NewEncoder(w).Encode(user)
+func root(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	http.ServeFile(w, r, "api.html")
+	return
 }
 
 func userIndex(w http.ResponseWriter, r *http.Request) {
@@ -77,7 +68,7 @@ func userPut(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
-func DBTest(w http.ResponseWriter, r *http.Request) {
+func dbTest(w http.ResponseWriter, r *http.Request) {
 	urlParams := mux.Vars(r)
 	userName := urlParams["user"]
 

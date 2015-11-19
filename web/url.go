@@ -2,6 +2,7 @@ package web
 
 import "os"
 
+// URL returns a URL string given a path.
 func URL(path string) string {
 	var URL string
 	URL = baseURL() + "/" + path

@@ -1,8 +1,10 @@
 package web
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/EconomistDigitalSolutions/ramlapi"
 	"github.com/gorilla/mux"
@@ -31,6 +33,16 @@ func assembleRoutes() {
 
 func routerFunc(ep *ramlapi.Endpoint) {
 	path := ep.Path
+
+	for _, up := range ep.URIParameters {
+		if up.Pattern != "" {
+			path = strings.Replace(
+				path,
+				fmt.Sprintf("{%s}", up.Key),
+				fmt.Sprintf("{%s:%s}", up.Key, up.Pattern),
+				1)
+		}
+	}
 
 	router.
 		Methods(ep.Verb).

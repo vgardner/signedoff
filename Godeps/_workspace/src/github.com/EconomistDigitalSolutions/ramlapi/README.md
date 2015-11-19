@@ -7,6 +7,18 @@ The ramlapi codebase contains two packages:
 * Ramlapi - used to parse a RAML file and wire it up to a router.
 * Ramlgen - used to parse a RAML file and write a set of HTTP handlers.
 
+#### RAML Compatibility
+
+The current version of the Ramlapi and Ramlgen packages supports *most* of the 0.8 RAML specification.
+
+Our intention is to implement further support as:
+
+1. Preliminary 1.0 support
+2. Full 1.0 support
+3. Additional 0.8 support
+
+Enhancing 0.8 support is a low priority as users are strongly urged to migrate to 1.0 as soon as possible
+
 #### HOW TO RAML-GEN
 
 1. Build your API design in RAML.
@@ -14,6 +26,10 @@ The ramlapi codebase contains two packages:
 3. Copy the resulting `handlers_gen.go` file to the correct location.
 
 You now have a set of HTTP handlers built from your RAML specification.
+
+Right now raml-gen only supports routers that use the standard http.Handlerfunc handlers. If you want to use something like
+Echo or HttpRouter you'll need to make some amendments as described in the examples below.
+
 
 #### HOW TO RAMLAPI
 
@@ -108,16 +124,30 @@ func main() {
 }
 
 func routerFunc(ep *ramlapi.Endpoint) {
+	path := ep.Path
+
+	for _, up := range ep.URIParameters {
+		if up.Pattern != "" {
+			path = strings.Replace(
+				path,
+				fmt.Sprintf("{%s}", up.Key),
+				fmt.Sprintf("{%s:%s}", up.Key, up.Pattern),
+				1)
+		}
+	}
+
 	route := router.
 		Methods(ep.Verb).
-		Path(ep.Path).
+		Path(path).
 		Handler(RouteMap[ep.Handler])
 
-	for _, param := range ep.QueryParameters {
-		if param.Pattern != "" {
-			route.Queries(param.Key, fmt.Sprintf("{%s:%s}", param.Key, param.Pattern))
-		} else {
-			route.Queries(param.Key, "")
+	for _, qp := range ep.QueryParameters {
+		if qp.Required {
+			if qp.Pattern != "" {
+				route.Queries(qp.Key, fmt.Sprintf("{%s:%s}", qp.Key, qp.Pattern))
+			} else {
+				route.Queries(qp.Key, "")
+			}
 		}
 	}
 }

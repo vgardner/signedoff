@@ -1,12 +1,10 @@
 package main
 
 import (
-	"encoding/json"
-	"github.com/gorilla/mux"
+	"log"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"log"
-	"net/http"
 )
 
 const DBNAME = "signedoff"
@@ -53,16 +51,4 @@ func getDbSession() *mgo.Session {
 	session.SetMode(mgo.Monotonic, true)
 
 	return session
-}
-
-// Remove at some point.
-func dbTestHandler(w http.ResponseWriter, r *http.Request) {
-	urlParams := mux.Vars(r)
-	userName := urlParams["user"]
-
-	saveObject("people", &Person{userName, "+55 53 8116 9639"})
-
-	result := getObject("people", bson.M{"name": userName})
-
-	json.NewEncoder(w).Encode(result)
 }

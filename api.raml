@@ -9,3 +9,16 @@ documentation:
 /:
   get:
     displayName: Root
+/api/user:
+  get:
+    displayName: UserIndex
+  post:
+    displayName: UserPost
+/api/user/{user:[a-zA-Z0-9-]+}:
+  get:
+    displayName: UserGet
+  post:
+    displayName: UserPut
+/db/{user:[a-zA-Z0-9-]+}:
+  post:
+    displayName: DBTest

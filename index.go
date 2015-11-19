@@ -2,8 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
-	"os"
+
+	"gopkg.in/mgo.v2/bson"
+
+	"github.com/gorilla/mux"
 )
 
 type Index struct {
@@ -14,36 +19,70 @@ type Index struct {
 
 var RouteMap = map[string]http.HandlerFunc{
 
-	"Root": IndexEndpointHandler,
+	"Root":      Root,
+	"UserIndex": userIndex,
+	"UserPost":  userPost,
+	"UserGet":   userGet,
+	"UserPut":   userPut,
+	"DBTest":    DBTest,
 }
 
-func IndexEndpointHandler(w http.ResponseWriter, r *http.Request) {
-	var user Index
-	user = getIndex()
-	w.Header().Set("Content-Type", "application/json")
-	//.MarshalIndent(data, "", "\t")
+func Root(w http.ResponseWriter, r *http.Request) {
+	user := Index{
+		Hostname:    baseURL(),
+		UserUrl:     URL("api/user"),
+		ReleasesUrl: URL("api/releases"),
+	}
 	json.NewEncoder(w).Encode(user)
 }
 
-func getIndex() Index {
-	var user Index
+func userIndex(w http.ResponseWriter, r *http.Request) {
+	type userIndex struct {
+		UserEndpoint string
+	}
+	json.NewEncoder(w).Encode(userIndex{UserEndpoint: URL("api/user/vgardner")})
+}
 
-	user = Index{
-		Hostname:    baseUrl(),
-		UserUrl:     url("api/user"),
-		ReleasesUrl: url("api/releases"),
+func userPost(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.FormValue("data"))
+	userFormData := []byte(`{"UserName":"hello", "Surname":"gardner", "FirstName": "Vin", "Role": "approver"}`)
+	var user User
+	err := json.Unmarshal(userFormData, &user)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	return user
+	json.NewEncoder(w).Encode(user)
 }
 
-func url(path string) string {
-	var url string
-	url = baseUrl() + "/" + path
-	return url
+func userGet(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	userName := urlParams["user"]
+
+	var user User
+	user = getUser(userName)
+
+	json.NewEncoder(w).Encode(user)
 }
 
-func baseUrl() string {
-	hostname, _ := os.Hostname()
-	return "http://" + hostname + ":3002"
+func userPut(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	userName := urlParams["user"]
+
+	var user User
+	user = getUser("Not saving this guy " + userName)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(user)
+}
+
+func DBTest(w http.ResponseWriter, r *http.Request) {
+	urlParams := mux.Vars(r)
+	userName := urlParams["user"]
+
+	saveObject("people", &Person{userName, "+55 53 8116 9639"})
+
+	result := getObject("people", bson.M{"name": userName})
+
+	json.NewEncoder(w).Encode(result)
 }

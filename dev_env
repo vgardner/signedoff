@@ -1,0 +1,4 @@
+export GITHUB_CLIENT_TOKEN=""
+
+# To setup your development environment, run:
+# $ source dev_env

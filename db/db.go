@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"log"
@@ -15,8 +15,8 @@ type Person struct {
 	Phone string
 }
 
-func saveObject(collectionName string, object interface{}) {
-	session := getDbSession()
+func SaveObject(collectionName string, object interface{}) {
+	session := getDBSession()
 	defer session.Close()
 
 	collection := session.DB(DBNAME).C(collectionName)
@@ -26,8 +26,8 @@ func saveObject(collectionName string, object interface{}) {
 	}
 }
 
-func getObject(collectionName string, bsonObject bson.M) interface{} {
-	session := getDbSession()
+func GetObject(collectionName string, bsonObject bson.M) interface{} {
+	session := getDBSession()
 	defer session.Close()
 
 	collection := session.DB(DBNAME).C(collectionName)
@@ -41,8 +41,7 @@ func getObject(collectionName string, bsonObject bson.M) interface{} {
 	return result
 }
 
-func getDbSession() *mgo.Session {
-	// Start session.
+func getDBSession() *mgo.Session {
 	session, err := mgo.Dial(DBHOST)
 	if err != nil {
 		panic(err)

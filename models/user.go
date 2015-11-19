@@ -1,4 +1,6 @@
-package main
+package models
+
+import "github.com/vgardner/signedoff-api/db"
 
 type User struct {
 	UserName  string
@@ -8,20 +10,16 @@ type User struct {
 	Created   int
 }
 
-func getUser(userName string) User {
-	var user User
-
-	user = User{
+func GetUser(userName string) User {
+	return User{
 		UserName:  userName,
 		FirstName: "Vin",
 		Surname:   "Gardner",
 		Role:      "God",
 		Created:   12344,
 	}
-
-	return user
 }
 
-func saveUser(user User) {
-	saveObject("user", user)
+func SaveUser(user User) {
+	db.SaveObject("user", user)
 }

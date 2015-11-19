@@ -1,4 +1,4 @@
-package main
+package web
 
 import (
 	"encoding/json"
@@ -9,6 +9,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"github.com/gorilla/mux"
+	"github.com/vgardner/signedoff-api/db"
+	"github.com/vgardner/signedoff-api/models"
 )
 
 type Index struct {
@@ -46,7 +48,7 @@ func userIndex(w http.ResponseWriter, r *http.Request) {
 func userPost(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.FormValue("data"))
 	userFormData := []byte(`{"UserName":"hello", "Surname":"gardner", "FirstName": "Vin", "Role": "approver"}`)
-	var user User
+	var user models.User
 	err := json.Unmarshal(userFormData, &user)
 	if err != nil {
 		log.Fatal(err)
@@ -59,8 +61,7 @@ func userGet(w http.ResponseWriter, r *http.Request) {
 	urlParams := mux.Vars(r)
 	userName := urlParams["user"]
 
-	var user User
-	user = getUser(userName)
+	user := models.GetUser(userName)
 
 	json.NewEncoder(w).Encode(user)
 }
@@ -69,8 +70,7 @@ func userPut(w http.ResponseWriter, r *http.Request) {
 	urlParams := mux.Vars(r)
 	userName := urlParams["user"]
 
-	var user User
-	user = getUser("Not saving this guy " + userName)
+	user := models.GetUser("Not saving this guy " + userName)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
@@ -80,9 +80,9 @@ func DBTest(w http.ResponseWriter, r *http.Request) {
 	urlParams := mux.Vars(r)
 	userName := urlParams["user"]
 
-	saveObject("people", &Person{userName, "+55 53 8116 9639"})
+	//db.SaveObject("people", &Person{userName, "+55 53 8116 9639"})
 
-	result := getObject("people", bson.M{"name": userName})
+	result := db.GetObject("people", bson.M{"name": userName})
 
 	json.NewEncoder(w).Encode(result)
 }

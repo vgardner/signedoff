@@ -4,9 +4,12 @@ signedoff.io API
 - [golang.org]
 
 ##Commands
-Start Application ``go run main.go``
+
+Build application ``make build``
+Run application ```./signedoff-api```
 
 ##Running
+
 The API will run on ``http://localhost:3002``
 
 ##Updating dependencies using Godep

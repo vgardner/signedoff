@@ -3,8 +3,6 @@ title: signedoff-api
 version: 1
 
 baseUri: http://github.com/vgardner/signeoff-api
-documentation:
-  -  title: Overview
 
 /:
   get:
@@ -14,11 +12,11 @@ documentation:
     displayName: UserIndex
   post:
     displayName: UserPost
-/api/user/{user:[a-zA-Z0-9-]+}:
+/api/user/{user}:
   get:
     displayName: UserGet
   post:
     displayName: UserPut
-/db/{user:[a-zA-Z0-9-]+}:
+/db/{user}:
   post:
     displayName: DBTest

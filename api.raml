@@ -1,0 +1,28 @@
+#%RAML 0.8
+title: signedoff-api
+version: 1
+
+baseUri: http://github.com/vgardner/signeoff-api
+
+/:
+  get:
+    displayName: Root
+/api/user:
+  get:
+    displayName: UserIndex
+  post:
+    displayName: UserPost
+/api/user/{user}:
+  uriParameters:
+    user:
+      pattern: [a-zA-Z0-9-]+
+  get:
+    displayName: UserGet
+  post:
+    displayName: UserPut
+/db/{user}:
+  uriParameters:
+    user:
+      pattern: [a-zA-Z0-9-]+
+  post:
+    displayName: DBTest

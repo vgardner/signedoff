@@ -1,0 +1,27 @@
+[submodule "vendor/github.com/EconomistDigitalSolutions/ramlapi"]
+	path = vendor/github.com/EconomistDigitalSolutions/ramlapi
+	url = https://github.com/EconomistDigitalSolutions/ramlapi
+[submodule "vendor/github.com/buddhamagnet/raml"]
+	path = vendor/github.com/buddhamagnet/raml
+	url = https://github.com/buddhamagnet/raml
+[submodule "vendor/github.com/buddhamagnet/yaml"]
+	path = vendor/github.com/buddhamagnet/yaml
+	url = https://github.com/buddhamagnet/yaml
+[submodule "vendor/github.com/google/go-github"]
+	path = vendor/github.com/google/go-github
+	url = https://github.com/google/go-github
+[submodule "vendor/github.com/google/go-querystring"]
+	path = vendor/github.com/google/go-querystring
+	url = https://github.com/google/go-querystring
+[submodule "vendor/github.com/gorilla/context"]
+	path = vendor/github.com/gorilla/context
+	url = https://github.com/gorilla/context
+[submodule "vendor/github.com/gorilla/mux"]
+	path = vendor/github.com/gorilla/mux
+	url = https://github.com/gorilla/mux
+[submodule "vendor/gopkg.in/mgo.v2"]
+	path = vendor/gopkg.in/mgo.v2
+	url = https://gopkg.in/mgo.v2
+[submodule "vendor/github.com/golang/oauth2"]
+	path = vendor/github.com/golang/oauth2
+	url = https://github.com/golang/oauth2/

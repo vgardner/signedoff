@@ -1,27 +1,14 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
+
+	"github.com/vgardner/signedoff-api/web"
 )
 
-const HOSTPORT = ":3002"
-
-func init() {
-	// Load environment variables from .env file.
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
-
 func main() {
-	// Start router.
-	http.Handle("/", getRouter())
-
-	serverErr := http.ListenAndServe(HOSTPORT, nil)
-	if serverErr != nil {
-		log.Fatal(serverErr)
-	}
+	web.NewRouter()
+	log.Println("running...")
+	log.Fatal(http.ListenAndServe(":3002", nil))
 }
